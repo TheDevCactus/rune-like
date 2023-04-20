@@ -3,32 +3,12 @@ use std::{
     net::{SocketAddr, UdpSocket},
 };
 use messaging::Message;
-
-struct WorldState {
-    positions: HashMap<SocketAddr, (f32, f32)>,
-}
-
-impl WorldState {
-    fn new() -> Self {
-        Self {
-            positions: HashMap::new(),
-        }
-    }
-
-    fn spawn(&mut self, addr: SocketAddr) {
-        self.positions.insert(addr, (0.0, 0.0));
-    }
-
-    fn update_position(&mut self, addr: SocketAddr, x_delta: f32, y_delta: f32) {
-        let (x, y) = self.positions.get(&addr).expect("Player not found");
-        self.positions.insert(addr, (x + x_delta, y + y_delta));
-    }
-}
+use shared::{area::Area, entity::Entity};
 
 fn main() {
     let connections: std::sync::Arc<std::sync::Mutex<HashMap<SocketAddr, bool>>> =
         std::sync::Arc::new(std::sync::Mutex::new(HashMap::new()));
-    let mut world_state = std::sync::Arc::new(std::sync::Mutex::new(WorldState::new()));
+    let area = std::sync::Arc::new(std::sync::Mutex::new(Area::new()));
 
     let connections_clone = std::sync::Arc::clone(&connections);
     let _handle = std::thread::spawn(move || {
@@ -44,7 +24,7 @@ fn main() {
                 Message::Connect => {
                     println!("{} connected", src);
                     connections_clone.lock().unwrap().insert(src, true);
-                    world_state.lock().unwrap().spawn(src);
+                    area.lock().unwrap().entities.push(Entity::new())
                 }
                 Message::Disconnect => {
                     println!("{} disconnected", src);
