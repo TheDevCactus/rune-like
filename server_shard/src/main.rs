@@ -24,7 +24,7 @@ fn main() {
                 Message::Connect => {
                     println!("{} connected", src);
                     connections_clone.lock().unwrap().insert(src, true);
-                    area.lock().unwrap().entities.push(Entity::new())
+                    area.lock().unwrap().entities.push(Entity::new());
                 }
                 Message::Disconnect => {
                     println!("{} disconnected", src);
