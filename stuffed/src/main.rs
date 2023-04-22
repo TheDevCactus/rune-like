@@ -5,7 +5,6 @@ const COLON: &str = ":";
 const SEMICOLON: &str = ";";
 const COMMA: &str = ",";
 const ROLL_OUT: &str = ">";
-const ARRAY: &str = "[]";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
@@ -19,7 +18,6 @@ pub enum Token {
     Semicolon,
     Comma,
     RollOut,
-    Array
 }
 
 impl From<String> for Token {
@@ -32,7 +30,6 @@ impl From<String> for Token {
             SEMICOLON => Token::Semicolon,
             COMMA => Token::Comma,
             ROLL_OUT => Token::RollOut,
-            ARRAY => Token::Array,
             _ => Token::ContextRequired(s),
         }
     }
@@ -48,7 +45,6 @@ impl Into<String> for Token {
             Token::Colon => COLON.to_string(),
             Token::Comma => COMMA.to_string(),
             Token::Semicolon => SEMICOLON.to_string(),
-            Token::Array => ARRAY.to_string(),
             Token::ContextRequired(s) => s,
             Self::Ident(s) => s,
             Self::Value(n) => n.to_string(),
@@ -66,7 +62,6 @@ enum Property {
 struct Structure {
     name: String,
     nodes: Vec<Property>,
-    array_indexes: Vec<bool>,
 }
 
 fn main() {
@@ -105,7 +100,6 @@ fn main() {
     let mut current_structure = Structure {
         name: String::new(),
         nodes: Vec::new(),
-        array_indexes: Vec::new(),
     };
     let mut current_property_type = Property::OneOf(String::new());
     let mut current_property = Token::Ident(String::new());
@@ -116,7 +110,6 @@ fn main() {
                 current_structure = Structure {
                     name: String::new(),
                     nodes: Vec::new(),
-                    array_indexes: Vec::new(),
                 };
             }
             Token::Ident(s) => {
@@ -162,23 +155,11 @@ fn main() {
                     0.to_string()
                 );
             }
-            Token::Array => {
-                current_structure.array_indexes.push(true);
-            }
-            Token::Comma => {
-                if current_structure.array_indexes.len() < current_structure.nodes.len() {
-                    current_structure.array_indexes.push(false);
-                }
-            }
             Token::Semicolon => {
-                if current_structure.array_indexes.len() < current_structure.nodes.len() {
-                    current_structure.array_indexes.push(false);
-                }
                 structures.push(current_structure);
                 current_structure = Structure {
                     name: String::new(),
                     nodes: Vec::new(),
-                    array_indexes: Vec::new(),
                 };
             }
             _ => {}
