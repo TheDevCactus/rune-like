@@ -1,20 +1,20 @@
 ENTRY message_type one of:
-connect;
-disconnect;
-move_to;
-interact_with;
-nested;
-ping;
+connect,
+disconnect,
+move_to,
+interact_with,
+nested,
+ping,
 pong;
 
 sub_type one of:
-a;
-b;
+a,
+b,
 c;
 
 move_to precedes:
-X 8;
-Y 8;
+X 8,
+Y 8[];
 
 interact_with precedes:
 entity_id 32;
