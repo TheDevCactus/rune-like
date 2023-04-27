@@ -9,13 +9,14 @@ X 8,
 Y 8;
 
 interact_with precedes:
+action>,
 entity_id 32;
 
-nested precedes:
-sub_type>,
-i 16 [];
+action one_of:
+examine,
+pick_up,
+use,
+drop,
+talk_to,
+attack;
 
-sub_type one_of:
-a,
-b,
-c;
