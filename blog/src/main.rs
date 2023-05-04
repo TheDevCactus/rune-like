@@ -12,7 +12,6 @@ async fn main() {
         .expect("Could not get messages");
 
     let mut handlebars = handlebars::Handlebars::new();
-
     handlebars
         .register_template_file("index", "./templates/index.handlebars")
         .expect("failed to register template");
