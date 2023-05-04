@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 messaging = {path = "../messaging" }
 shared = {path = "../shared" }
+udp-lib = {path = "../udp-lib" }

@@ -1,0 +1,505 @@
+<html>
+  <style>
+    :root {
+      --main-color-darker: #0a0a0a;
+      --main-color: #0f0f0f;
+      --main-color-lighter: #141414;
+      --main-color-lightest:  #1a1a1a;
+
+      --max-content-width: 1000px;
+    }
+
+    img {
+      width: 22px;
+      height: 22px;
+      display: inline;
+    }
+
+    body {
+      background-color: var(--main-color-darker);
+      color: white;
+      margin: 0px;
+      font-family: sans-serif;
+    }
+    main {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    footer {
+      height: 50px;
+      background-color: var(--main-color);
+    }
+    header {
+      height: 50px;
+      background-color: var(--main-color-lighter);
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center :not(img) {
+      max-width: var(--max-content-width);
+      width: 100%;
+    }
+  </style>
+  <body>
+    <header class="center">
+      <h1>🌵Cactus's Ramblings🌵</h1>
+    </header>
+    <main class="center">
+          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>1:29 PM - 2023-05-01</h3>
+            <div>So I've been working on my message chunking. WE'RE THROWING IT STRAIGHT IN THE TRASH BABY. LETS GOOOOO <img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/933216253009625218.gif?size=44&quality=lossless"
+            alt="primeGood"
+            onerror="this.src='https://cdn.discordapp.com/emojis/933216253009625218.webp?size=44&quality=lossless'"
+          />. 
+          
+          I completely forgot that U.D.P doesn't enforce message order. So if I want to continue down the chunking rabbit hole I would need to implement sending some extra chunk meta data like chunk index as well. This also means sorting the chunks once they are all received. Yet another performance hit for the chunking solution. All this complexity and performance cost just to minimize memory usage of our buffer seems stupid at this point.
+          
+          I have decided it would be better to just drop the chunking idea all together and just make a single large buffer big enough to read all messages. Then enforce a limit on user input to be within a single buffer. I doubt people will be sending + 1k chars in a single chat message, and if they are they can just send it in two messages <img
+            src="https://cdn.discordapp.com/emojis/1043971845155737631.gif?size=44&quality=lossless"
+            alt="KKool"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1043971845155737631.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/1043971845155737631.gif?size=44&quality=lossless"
+            alt="KKool"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1043971845155737631.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/1043971845155737631.gif?size=44&quality=lossless"
+            alt="KKool"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1043971845155737631.webp?size=44&quality=lossless'"
+          />.
+          
+          This makes the past few days worthless but I did get some more good experience with rusts bit manipulation and threading support which will help in the future. Also i think following these dead end rabbit holes can sometimes provide unknown insights into future problems you run into so i'm all here for it. As disappointing as it is to see your ideas be absolutely idiotic gigantic wastes of time, I think those moments can really teach you a lot and shape your frame of thinking just as much as developing the right solution the first time can, if not more.
+          
+          I'll probably keep this code around just in case the need does arise for some reason to have chunked udp messages. But for now we are moving away from chunking and will just use a 1024 byte buffer.
+          
+          Have a slow day at work today so i'll be able to make some progress on a single buffer solution today. Sorry I got a bit preachy/guru there in the middle of this update lol.</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>6:42 PM - 2023-04-27</h3>
+            <div>In today's episode we got back to work on the networking side of things, needed an easier task than generating encode/decode functions from an AST lol.
+           
+          I wanted to attack the issue of sending messages in chunks today. To solve for this I utilized a stack, which when pushed to, checks to see if the contents of a stack represents a whole message or not. If it does, It will flush the contents of the stack into a FIFO queue as a single message and the cycle continues. 
+          
+          Didn't get much done today I know sorry. I was held up in a fair amount of meetings. Apparently the backend team needs some help with their python code bases so my backend career might be starting sooner than expected! Still will be following through with this as I think it will still beneficial experience and is a good structured way for me to learn. 
+          
+          If your curious about the code written today here is the source for the stack and queue system. I called it a MessageCollector, idk lol. 
+          ```rs
+          
+          pub struct MessageCollector {
+              chunks: Vec<MessageChunk>,
+              messages: Vec<Vec<MessageChunk>>,
+          }
+          
+          impl MessageCollector {
+              pub fn new() -> MessageCollector {
+                  MessageCollector {
+                      chunks: Vec::new(),
+                      messages: Vec::new(),
+                  }
+              }
+          
+              pub fn push(&mut self, chunk: MessageChunk) -> Result<(), ()> {
+                  let message_start_type = get_message_chunk_meta_data(chunk).start_chunk_type;
+                  let prev_message_end_type =
+                      get_message_chunk_meta_data(*self.chunks.last().unwrap()).end_chunk_type;
+          
+                  match prev_message_end_type {
+                      MessageChunkType::NewMessage => {
+                          match message_start_type {
+                              MessageChunkType::NewMessage => {
+                                  let mut chunks = Vec::new();
+                                  std::mem::swap(&mut chunks, &mut self.chunks);
+                                  self.chunks.push(chunk);
+          
+                                  self.messages.push(chunks);
+                              }
+                              MessageChunkType::Continuation => return Err(()),
+                          };
+                      }
+                      MessageChunkType::Continuation => {
+                          match message_start_type {
+                              MessageChunkType::NewMessage => return Err(()),
+                              MessageChunkType::Continuation => {
+                                  self.chunks.push(chunk);
+                              }
+                          };
+                      }
+                  };
+          
+                  return Ok(());
+              }
+          
+              pub fn read_message(&mut self) -> Option<Vec<MessageChunk>> {
+                  if self.messages.is_empty() {
+                      return None;
+                  }
+          
+                  let message = self.messages.remove(0);
+          
+                  return Some(message);
+              }
+          }
+          ```
+          
+          The nested matching is kinda scary but i cant think of a better way to deal with that kind of multi dimensional comparisons, very open to opinions on that. 
+          There is most definitely bugs in this, I haven't even had time to try running this but I think the basic idea is okay for now.</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>8:29 PM - 2023-04-21</h3>
+            <div>I've realized I wont be able to send back the whole game state within 64 bits (<img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> <img
+            src="https://cdn.discordapp.com/emojis/953114357863153674.gif?size=44&quality=lossless"
+            alt="primeClap1"
+            onerror="this.src='https://cdn.discordapp.com/emojis/953114357863153674.webp?size=44&quality=lossless'"
+          /> ) so i'll need to setup a system to chain messages together.
+          
+          Having udp messages chunked and sent seperately means we need to handle dropped message chunks. We can solve this pretty easily using the last bit of each message to signify if it contains a whole message, or only a chunk. Also we will have the first bit in each message signify if it is the start of a message, or a continuation. That seemed redundant to me at first but I need a way to tell if we did indeed drop a chunk. If we did, we know the number of chunks we have thus far, and we should request the chunk index again from the sender. If that is to much pinging back and fourth we can also just drop the message. This could be determined on a message type basis so that certain events can be ensured to happen.</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>7:59 PM - 2023-04-21</h3>
+            <div>===== Day Two ======================================
+          
+          So I spent most of today thinking about networking. To try and maximize "info per byte", bit packing is a must. I figure with such a simple game I should be able to cram any message into a single 64 bytes. Here is my reasoning.
+          
+          - A single server instance is only going to take care of a [255, 255] Area, so that works fine, 16 bits is nothing. 
+          - Any time we need to pass some sort of unique identifier in a message we could use 32 bits which limits us to 4294967295 UID's before we start having issues but I really don't see a situation where I hit that limit on a UDP networked message. So that leaves a whole other 32 bits to cram with other flags and values. (Watch this bite me in the butt <img
+            src="https://cdn.discordapp.com/emojis/1043971845155737631.gif?size=44&quality=lossless"
+            alt="KKool"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1043971845155737631.webp?size=44&quality=lossless'"
+          />)
+          
+          I wrote out a lot of bit masks for custom messages and started to write some parsing functions when quickly deciding that this is going to become unmaintainable trying to manually build these bit masks and not fuck up at some point causing an incredibly painful bug.
+          
+          With this in mind I started thinking about some tooling I can build to help. Thought about a library which would implement some builder type pattern but I don't like the idea of encoring runtime cost to perform setup things like that. IDK maybe that's ridiculous, lemme know. 
+          
+          Macros came to my mind as well but I haven't played with them much and to much macro voodoo scares me.
+          
+          So I finally landed on just creating a little Markup language which will describe the minimal amount of information to generate some encoding/decoding lib's from.
+          
+          Formally I am calling it `stuffed` but `pdml` for Pack Daddy Markdown Language is another option.
+          
+          Below is an example of the language
+          ```
+          ENTRY message_type one of:
+          connect;
+          disconnect;
+          move_to;
+          interact_with;
+          nested;
+          ping;
+          pong;
+          
+          sub_type one of:
+          a;
+          b;
+          c;
+          
+          move_to precedes:
+          X 8;
+          Y 8;
+          
+          interact_with precedes:
+          entity_id 32;
+          
+          nested precedes:
+          sub_type;
+          i 16;
+          ```
+          
+          The syntax provides us with the following tools.
+          
+          - We can define what the root of our bit chain should be with `ENTRY`
+          - We can define identifiers for our structures like `message_type`, and `sub_type`
+          - These structures let us define a group of Options, or Properties. a section can only contain either Options, or Properties (and references but ignore that).
+          - Options let us define a value that can be serializable into a binary counter type representation.
+          - Properties let us define a value that can freely fill the specified amount of bits following the properties identifier.
+          - Property structures can also contain references to other sections allowing us to chain together structures 
+          - `precedes` lets us do some conditional chaining which rounds out all the abilities i need for now. It is also how you define a structure as being a "property struct" where as `one_of` lets us create a "option struct". these keywords are still up in the air for now.
+          
+          So I wrote a little Lexer which reads in a source file and stores these structures in memory. We dont need any fancy AST, a flat vector is fine. Next step is to write a parser and somehow create a consumable result from all of this. But that sounds like the right thing to do. We don't do that here, We get distracted. So we are first gonna implement a LSP for `stuffed-ml`. That will be tomorrows goal most likely. I have to mow the lawn as well. 
+          
+          To wrap up for today, I uploaded the latest code to the repository which is in the first message. I have not thought about doing any clean up or organization yet so its in the "get it running" state, flame away and LMK if there's anything that looks stupid. Tomorrow will be about getting the LSP setup, hopefully that doesn't take more than the weekend (<img
+            src="https://cdn.discordapp.com/emojis/1053416319497805915.gif?size=44&quality=lossless"
+            alt="deranged"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1053416319497805915.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/1053416319497805915.gif?size=44&quality=lossless"
+            alt="deranged"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1053416319497805915.webp?size=44&quality=lossless'"
+          /><img
+            src="https://cdn.discordapp.com/emojis/1053416319497805915.gif?size=44&quality=lossless"
+            alt="deranged"
+            onerror="this.src='https://cdn.discordapp.com/emojis/1053416319497805915.webp?size=44&quality=lossless'"
+          />) and then Monday we can implement getting a result out of all of this, then back to the game.</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>4:24 PM - 2023-04-20</h3>
+            <div>Side track for a second to take a look at this diagram to show how to build any possible collision setup for a given tile using bitmasking to keep things tiny</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>12:53 AM - 2023-04-20</h3>
+            <div>Now that we have our messaging setup we can handle our disconnect message gracefully.
+          
+          ```rs
+          fn main() {
+              let mut connections: HashMap<SocketAddr, bool> = HashMap::new();
+              let socket = UdpSocket::bind("127.0.0.1:8080").expect("Could not bind client socket");
+              let mut buf = [0;1];
+          
+              loop {
+                  let (_amt, src) = socket
+                      .recv_from(&mut buf)
+                      .expect("Could not read into buffer");
+          
+                  match buf[0].into() {
+                      Message::Connect => {
+                          println!("{} connected", src);
+                          connections.insert(src, true);
+                      },
+                      Message::Disconnect => {
+                          println!("{} disconnected", src);
+                          connections.remove(&src);
+                      },
+                      Message::Ping => {
+                          println!("{} pinged", src);
+                      }
+                  } 
+              }
+          }
+          ```</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>12:22 AM - 2023-04-20</h3>
+            <div>At this point, We need to start thinking about how a user will disconnect. They can either do so gracefully by sending us a kind message saying they are leaving, or they can just dip. 
+          
+          We cant quite tackle just dipping yet because our loop is tied to receiving messages, not game time. We will need to wait until our game loop has set ticks so we can have implement timeouts to handle the yolo alt+f4 quit.  
+          
+          But we can handle the graceful exit for now. To do this we need to start thinking about messages. Storing our message types in an enum seems like a reasonable solution for now. then we can smack those bad boys into `u8`'s with a little `impl`
+          
+          ```rs
+          enum Message {
+              Connect,
+              Disconnect,
+              Ping
+          }
+          
+          impl Into<u8> for Message {
+              fn into(self) -> u8 {
+                  match self {
+                      Message::Connect => 0,
+                      Message::Disconnect => 1,
+                      Message::Ping => 2
+                  }
+              }
+          }
+          ```
+          
+          Keeping whole message types in a single u8 will help keep messages short. I doubt we will need more than 255 unique message types so a `u8` should scale for the forseable future.</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>12:02 AM - 2023-04-20</h3>
+            <div>Our main file is starting to beef up and we now have a loop going. At this point, we can ping the server multiple times from the same client and the server will know if its a new connection or not.
+          
+          ```rs
+          fn main() {
+              let mut connections: HashMap<SocketAddr, bool> = HashMap::new();
+          
+              let socket = UdpSocket::bind("127.0.0.1:8080").expect("Could not bind client socket");
+              let mut buf = [0; 12];
+          
+              loop {
+                  let (amt, src) = socket
+                      .recv_from(&mut buf)
+                      .expect("Could not read into buffer");
+                  match connections.contains_key(&src) {
+                      true => {
+                          println!("Received {} bytes from known sender {}", amt, src);
+                          socket.send_to(&buf, &src).expect("Could not send data");
+                      }
+                      false => {
+                          println!("Received {} bytes from {}", amt, src);
+                          socket.send_to(&buf, &src).expect("Could not send data");
+                          connections.insert(src, true);
+                      }
+                  }
+              }
+          }
+          ```</div>
+          </article>
+          <hr />          <style>
+            .post, p {
+              font-size: 24px;
+            }
+            .post {
+              line-height: 1.4em;
+            }
+          </style>
+          <article class="post">
+            <h3>11:55 AM - 2023-04-20</h3>
+            <div>==== Day One ===============================
+          
+          So today the goal is to get a simple server out of the way. To achieve low latency networking we will take advantage of the UDP protocol. UDP comes at the cost of your communication being loss-tolerant, but in our case that's alright.
+          
+          Oh but cactus, runescape was a web game, the web doesn't support UDP you idiot. Well then i guess the web can suck it. We are going native client baby.
+          
+          Rust provides us with a UDPSocket implementation out of the box which is nice, Getting a message sent back and fourth between two local sockets was incredibly quick.  Setting up a socket is as easy as binding it to a port and your good.
+          
+          ```rs
+          let socket = UdpSocket::bind("127.0.0.1:3400").expect("couldn't bind to address");
+          ```
+          
+          To track connections, we need some sort of dict so we can whip that up real quick. first we need some way to key connections so we can pass the connections socket address through a hash function. The std lib provides us with a nice set of hashing functionality, and amazingly, they actually implemented the Hash trait on the socket address structs. It does pretty much exactly what you would think it does, combines the ip and port in the provided hash function. Heres the exact impl if your interested.
+          
+          ```rs
+          #[stable(feature = "rust1", since = "1.0.0")]
+          impl hash::Hash for SocketAddrV4 {
+              fn hash<H: hash::Hasher>(&self, s: &mut H) {
+                  (self.port, self.ip).hash(s)
+              }
+          }
+          #[stable(feature = "rust1", since = "1.0.0")]
+          impl hash::Hash for SocketAddrV6 {
+              fn hash<H: hash::Hasher>(&self, s: &mut H) {
+                  (self.port, &self.ip, self.flowinfo, self.scope_id).hash(s)
+              }
+          }
+          ```
+          
+          We can use a hashmap to store our connections. We can still blast over all the entries in O(n) time but we can also directly pluck out connections on DC or timeout in a relatively efficient time complexity as well. I dont think its constant but its low.</div>
+          </article>
+          <hr />    </main>
+    <footer class="center">
+      <p>certified dumbass</p>
+    </footer>
+  </body>
+</html>

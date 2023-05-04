@@ -1,0 +1,62 @@
+<html>
+  <style>
+    :root {
+      --main-color-darker: #0a0a0a;
+      --main-color: #0f0f0f;
+      --main-color-lighter: #141414;
+      --main-color-lightest:  #1a1a1a;
+
+      --max-content-width: 1000px;
+    }
+
+    img {
+      width: 22px;
+      height: 22px;
+      display: inline;
+    }
+
+    body {
+      background-color: var(--main-color-darker);
+      color: white;
+      margin: 0px;
+      font-family: sans-serif;
+    }
+    main {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    footer {
+      height: 50px;
+      background-color: var(--main-color);
+    }
+    header {
+      height: 50px;
+      background-color: var(--main-color-lighter);
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center :not(img) {
+      max-width: var(--max-content-width);
+      width: 100%;
+    }
+  </style>
+  <body>
+    <header class="center">
+      <h1>🌵Cactus's Ramblings🌵</h1>
+    </header>
+    <main class="center">
+        {{#each posts}}
+          {{> post}}
+        {{/each}}
+    </main>
+    <footer class="center">
+      <p>certified dumbass</p>
+    </footer>
+  </body>
+</html>

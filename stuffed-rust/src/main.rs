@@ -1,33 +1,31 @@
 struct _MoveTo {
-    X: i32,
-    Y: i32,
+    X: u8,
+    Y: u8,
 }
 
 enum _MessageType {
-    Connect,
-    Disconnect,
-    MoveTo(_MoveTo),
-    InteractWith
+    Connect = 0,
+    Disconnect = 1,
+    MoveTo = 2,
+    InteractWith = 3,
 }
 
 enum _Action {
-    Examine,
-    TalkTo,
-    Attack,
-    Use,
-    Drop,
+    Examine = 0,
+    TalkTo = 1,
+    Attack = 2,
+    Use = 3,
+    Drop = 4,
 }
 
 struct _InteractWith {
     entity_id: i32,
-    action: _Action, 
+    action: _Action,
 }
 
 struct Stuffed {
-   message_type: _MessageType,
+    message_type: _MessageType,
 }
-
-pub fn parse_bytes_into_stuffed_structure
 
 fn main() {
     let file_contents = std::fs::read_to_string("rune-like.stuffed").unwrap();

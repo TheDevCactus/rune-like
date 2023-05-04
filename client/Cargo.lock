@@ -22,6 +22,7 @@ dependencies = [
  "messaging",
  "sdl2",
  "shared",
+ "udp-lib",
 ]
 
 [[package]]
@@ -100,6 +101,10 @@ dependencies = [
 
 [[package]]
 name = "shared"
+version = "0.1.0"
+
+[[package]]
+name = "udp-lib"
 version = "0.1.0"
 
 [[package]]
