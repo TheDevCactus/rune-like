@@ -140,7 +140,9 @@ impl DiscordClient {
                     .iter()
                     .any(|reaction| {
                         if let Some(emoji_name) = reaction.emoji.name.clone() {
-                            if emoji_name == std::env::var(env_manager::POST_EMOJI).unwrap() {
+                            if emoji_name == std::env::var(env_manager::POST_EMOJI).unwrap()
+                                && reaction.me
+                            {
                                 return true;
                             }
                         }
