@@ -1,9 +1,10 @@
+use messaging::Message;
+use shared::{area::Area, entity::Entity};
 use std::{
     collections::HashMap,
     net::{SocketAddr, UdpSocket},
 };
-use messaging::Message;
-use shared::{area::Area, entity::Entity};
+use udp_lib;
 
 fn main() {
     let connections: std::sync::Arc<std::sync::Mutex<HashMap<SocketAddr, bool>>> =
@@ -32,14 +33,13 @@ fn main() {
                 }
                 Message::Ping => {
                     println!("{} pinged", src);
-                },
+                }
                 Message::Pong => {
                     println!("{} ponged", src);
                 }
             }
         }
     });
-
 
     let socket = UdpSocket::bind("127.0.0.1:8081").expect("Could not bind client socket");
     let mut sleep_time = 0;
@@ -49,8 +49,11 @@ fn main() {
             std::thread::sleep(std::time::Duration::from_millis(sleep_time));
         }
         let tick_start = std::time::Instant::now();
-        let message = [Message::Ping.into()]; 
-        println!("Processing connections: {:?}", connections.lock().unwrap().len());
+        let message = [Message::Ping.into()];
+        println!(
+            "Processing connections: {:?}",
+            connections.lock().unwrap().len()
+        );
         // println!("World State: {:?}", world_state.positions);
         connections.lock().unwrap().iter().for_each(|(addr, _)| {
             match socket.send_to(&message, addr) {
